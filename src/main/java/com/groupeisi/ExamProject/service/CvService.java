@@ -5,6 +5,7 @@ import com.groupeisi.ExamProject.exception.EntityNotFoundException;
 import com.groupeisi.ExamProject.exception.RequestException;
 import com.groupeisi.ExamProject.mapping.CvMapper;
 import com.groupeisi.ExamProject.repositories.CvRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.MessageSource;
@@ -15,17 +16,15 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+
 @Service
+@AllArgsConstructor
 public class CvService {
-    private CvRepository cvRepository;
-    private CvMapper cvMapper;
+    CvRepository cvRepository;
+    CvMapper cvMapper;
     MessageSource messageSource;
 
-    public CvService(CvRepository cvRepository, CvMapper cvMapper, MessageSource messageSource) {
-        this.cvRepository = cvRepository;
-        this.cvMapper = cvMapper;
-        this.messageSource = messageSource;
-    }
+
 
     @Transactional(readOnly = true)
     public List<Cv> getCv() {
@@ -38,7 +37,7 @@ public class CvService {
     public Cv getCv(int id) {
         return cvMapper.toCv(cvRepository.findById(id)
                 .orElseThrow(() ->
-                        new EntityNotFoundException(messageSource.getMessage("role.notfound", new Object[]{id},
+                        new EntityNotFoundException(messageSource.getMessage("cv.notfound", new Object[]{id},
                                 Locale.getDefault()))));
     }
 
@@ -54,7 +53,7 @@ public class CvService {
                     cv.setId(id);
                     return cvMapper.toCv(
                             cvRepository.save(cvMapper.fromCv(cv)));
-                }).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("role.notfound", new Object[]{id},
+                }).orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("cv.notfound", new Object[]{id},
                         Locale.getDefault())));
     }
 
